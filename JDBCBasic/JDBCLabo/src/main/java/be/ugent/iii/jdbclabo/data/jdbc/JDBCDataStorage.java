@@ -30,7 +30,8 @@ import java.util.List;
  * 	4: Make a method setDataSource where u initialise the objects (from stap 3)
  * 	// In underlying code we initialise the object "dataSource" and CachedRowSet "officesRowSet"
  * 	----------------------------------------------------------------
- *                  @Autowired        * 		public void setDataSource(DataSource dataSource){
+ *          @Autowired
+ *          public void setDataSource(DataSource dataSource){
  * 			this.dataSource = dataSource;
  * 			try{
  * 				RowSetFactory rowSetFactory = RowSetProvider.newFactory();	 //Make RowSetFactory object to CREATE a CachedRowSet
@@ -41,9 +42,10 @@ import java.util.List;
  * 				officesRowSet.setCommand(qSelectOffices);	//Use the (previously defined 'qSelectOffices' in step 2 to select all the colums from the database
  * 				int[] id = {1};								//Define the column nr that will serve as the keyvalue in the RowSet
  * 				officesRowSet.setKeyColumns(id);			//Make column (here nr 1) the key column
- * 				officesRowSet.execute(connection);			//Execute the commands we have given officesRowSet so far otherwise the fuctions called to it will not be usable            * 			} catch (SQLException ex) {
+ * 				officesRowSet.execute(connection);			//Execute the commands we have given officesRowSet so far otherwise the fuctions called to it will not be usable
+ * 			} catch (SQLException ex) {
  * 				Logger.getLogger(JDBCOfficeStorage.class.getName()).log(Level.SEVERE, "opvragen mails mislukt", ex); 		//Give your own error message in this way
- *                    }
+ *          }
  * 		}
  * 	----------------------------------------------------------------
  *
