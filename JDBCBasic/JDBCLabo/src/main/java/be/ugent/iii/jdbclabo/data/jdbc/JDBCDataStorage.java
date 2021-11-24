@@ -14,40 +14,78 @@ import java.util.List;
 /**
  * Start of JDBC NOTES
  *
- * JDBC Stappen plan:
+ * SETTING UP POSTGRES IN application.properties:
+ * ---------------------------------------------------------------------------
+ * spring.datasource.url=jdbc:postgresql://localhost:5432/iii
+ * spring.datasource.username=iii
+ * spring.datasource.password=iiipwd
+ * spring.datasource.driverClassName=org.postgresql.Driver
+ * ---------------------------------------------------------------------------
+ * ____________________________________________________________________________________________________________________________________________________________________________________
  *
+ * JDBC Stappen plan:
  * 	1: Look at the .properties file in the folder of "/resources"
  * 	2: select all the values using @Value( "$ {   }") from the .properties file
  * 	3: Make a private object of the DataSource OR RowSet (CachedRowSet) in the class
  * 	4: Make a method setDataSource where u initialise the objects (from stap 3)
  * 	// In underlying code we initialise the object "dataSource" and CachedRowSet "officesRowSet"
  * 	----------------------------------------------------------------
- *          @Autowired
- *          public void setDataSource(DataSource dataSource){
+ *                  @Autowired        * 		public void setDataSource(DataSource dataSource){
  * 			this.dataSource = dataSource;
  * 			try{
- * 				RowSetFactory rsF = RowSetProvider.newFactory();	 //Make RowSetFactory object to CREATE a CachedRowSet
+ * 				RowSetFactory rowSetFactory = RowSetProvider.newFactory();	 //Make RowSetFactory object to CREATE a CachedRowSet
  * 				Connection conn = dataSource.getConnection();
- * 				conn.setAutoCommit(false);					         //Waits to execute untill you use the .execute method
+ * 				conn.setAutoCommit(false);					//Waits to execute untill you use the .execute method
  *
- * 				officesRowSet = rsF.createCachedRowSet();	         //Create the CachedRowSet using the rsF object
- * 				officesRowSet.setCommand(qSelectOffices);	         //Use the (previously defined 'qSelectOffices' in step 2 to select all the colums from the database
- * 				int[] id = {1};								         //Define the column nr that will serve as the keyvalue in the RowSet
- * 				officesRowSet.setKeyColumns(id);			         //Make column (here nr 1) the key column
- * 				officesRowSet.execute(connection);			         //Execute the commands we have given officesRowSet so far otherwise the fuctions called to it will not be usable
- * 			} catch (SQLException throwables) {
- * 				throwables.printStackTrace();
- *          }
+ * 				officesRowSet = rowSetFactory.createCachedRowSet();	//Create the CachedRowSet using the rowSetFactory object
+ * 				officesRowSet.setCommand(qSelectOffices);	//Use the (previously defined 'qSelectOffices' in step 2 to select all the colums from the database
+ * 				int[] id = {1};								//Define the column nr that will serve as the keyvalue in the RowSet
+ * 				officesRowSet.setKeyColumns(id);			//Make column (here nr 1) the key column
+ * 				officesRowSet.execute(connection);			//Execute the commands we have given officesRowSet so far otherwise the fuctions called to it will not be usable            * 			} catch (SQLException ex) {
+ * 				Logger.getLogger(JDBCOfficeStorage.class.getName()).log(Level.SEVERE, "opvragen mails mislukt", ex); 		//Give your own error message in this way
+ *                    }
  * 		}
  * 	----------------------------------------------------------------
  *
  * 	USING RowSet:
  * 	WEBSITE for all the methods for ResultSets, is usefull to find methods of look up methods you don't understand from lab solutions
  * 	https://docs.oracle.com/javase/7/docs/api/java/sql/ResultSet.html
+ * 	Github for reference : https://github.com/markakash/frameworks_for_server_application?fbclid=IwAR2xGR6250_D-U7lcb2aeTQDiXZUE3KfVwgA1bVKzsqZa7sGBEx7a1-G7kk
  *
- * 	eigenRowSetNaam		.beforeFirst()	: zorgt ervoor dat de "pointer" net voor de eerste data element wijst
- * 						.next()			: gaat naar de volgende data punt (volgende rij) met return een Boolean, kan je ook gebruiken in een while-lus
- */
+ * 	eigenRowSetNaam		.beforeFirst()	// zorgt ervoor dat de "pointer" net voor de eerste data element wijst
+ * 						.next()			// gaat naar de volgende data punt (volgende rij) met return een Boolean, kan je ook gebruiken in een while-lus
+ * 						.updateString(this.bla, bla))
+ * 						.getString(bla) //(bla is defined in the .properties file as a SQL QUERY ex: sql.bla )
+ * 						/*
+ * 						**ADDING a new row using RowSets
+ *
+ * 						.moveToInsertRow()								// This will save the current position of the pointer, and go to a speical row, In this row you can add the different values, this row acts as a buffer
+ * 						.insertRow()									// ONLY available after the moveToInsertRow(), the buffer row will be finally added to th and the
+ *                      .moveToCurrentRow()								// ONLY after using moveToInsertRow, this will restore the initil saved position
+ * NOT IN ORACLE WEBSITE:	.acceptChanges() 						    // The CACHEDRowSet is used as a buffer, when executing acceptChanges() you push the changes to the original datalayer using t                                                                        method
+ * 																		// This is needed to see changes in the original data layer, defined in the code (in code above: officesRowSet.execute(connection) ) WHERE connection = dce.getConnection()
+ * 						.updat        tring(this.attribute, "newString")		// Changes the string where the rowSct is pointing to
+ * 						.updateRow()									// Makes sure the changed attributes in the CACHEDRowSet is pushed (note that we disabled.setAutoComit(false) )
+ * JoiRwSet (declaration: JoinRowSet jrs = RowSetProvier.newFactory().createJoinRowSet(); )
+ * This RowSet is used to merge different (Cached)RowSetusing
+ * 						.addRowSet(blRowSet, "columNaam");
+ *
+ * ___________________________________________________________________________________________________________________________________________________________________________________
+ ** INJECTIE DataSource
+ *
+ * For injecting the DataSource you need to make sure that your applicatn.properties contains:
+ * 	----------------------------------------------------------------------------------------------------------------
+ * 	spring.datasource.url=jdbc:postgsql://localhost:5432/iii
+ * 	spring.datasource.username=iii
+ * 	spring.datasource.password=iiipwd
+ * 	spring.datasource.driverCssName=org.postgresql.Driver
+ * 	----------------------------------------------------------------------------------------------------------------
+ * Here you need to fit in correct values inthe diffrent fields
+ *
+ * If you want to injct SQL-QUERY into your Sringbootproject,you can add those in the "/main/resource"folder
+ * Do not forget to add : @PropertySource("classpath:sqlStatements.properties")		to your file where you are planning to use those SQL-QUERY'S
+ **/
+
 
 @Component
 @PropertySource("classpath:databankconstanten.properties")
