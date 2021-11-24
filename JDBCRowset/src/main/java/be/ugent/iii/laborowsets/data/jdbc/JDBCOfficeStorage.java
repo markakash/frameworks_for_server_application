@@ -119,6 +119,7 @@ public class JDBCOfficeStorage implements IOfficeStorage {
     public List<IOffice> allOffices() {
         List<IOffice> iOffices = new ArrayList<>();
         try {
+            //beforeFirst makes the "pointer" point to first column.
             officesRowSet.beforeFirst();
             while (officesRowSet.next()) {
                 iOffices.add(createOffice(officesRowSet));

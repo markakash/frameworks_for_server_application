@@ -11,6 +11,44 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Start of JDBC NOTES
+ *
+ * JDBC Stappen plan:
+ *
+ * 	1: Look at the .properties file in the folder of "/resources"
+ * 	2: select all the values using @Value( "$ {   }") from the .properties file
+ * 	3: Make a private object of the DataSource OR RowSet (CachedRowSet) in the class
+ * 	4: Make a method setDataSource where u initialise the objects (from stap 3)
+ * 	// In underlying code we initialise the object "dataSource" and CachedRowSet "officesRowSet"
+ * 	----------------------------------------------------------------
+ *          @Autowired
+ *          public void setDataSource(DataSource dataSource){
+ * 			this.dataSource = dataSource;
+ * 			try{
+ * 				RowSetFactory rsF = RowSetProvider.newFactory();	 //Make RowSetFactory object to CREATE a CachedRowSet
+ * 				Connection conn = dataSource.getConnection();
+ * 				conn.setAutoCommit(false);					         //Waits to execute untill you use the .execute method
+ *
+ * 				officesRowSet = rsF.createCachedRowSet();	         //Create the CachedRowSet using the rsF object
+ * 				officesRowSet.setCommand(qSelectOffices);	         //Use the (previously defined 'qSelectOffices' in step 2 to select all the colums from the database
+ * 				int[] id = {1};								         //Define the column nr that will serve as the keyvalue in the RowSet
+ * 				officesRowSet.setKeyColumns(id);			         //Make column (here nr 1) the key column
+ * 				officesRowSet.execute(connection);			         //Execute the commands we have given officesRowSet so far otherwise the fuctions called to it will not be usable
+ * 			} catch (SQLException throwables) {
+ * 				throwables.printStackTrace();
+ *          }
+ * 		}
+ * 	----------------------------------------------------------------
+ *
+ * 	USING RowSet:
+ * 	WEBSITE for all the methods for ResultSets, is usefull to find methods of look up methods you don't understand from lab solutions
+ * 	https://docs.oracle.com/javase/7/docs/api/java/sql/ResultSet.html
+ *
+ * 	eigenRowSetNaam		.beforeFirst()	: zorgt ervoor dat de "pointer" net voor de eerste data element wijst
+ * 						.next()			: gaat naar de volgende data punt (volgende rij) met return een Boolean, kan je ook gebruiken in een while-lus
+ */
+
 @Component
 @PropertySource("classpath:databankconstanten.properties")
 public class JDBCDataStorage implements IDataStorage {
