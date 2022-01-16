@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Labo8.Models.NewsMessage>
+@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer Localizer
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+<h1>Index</h1>
+
+<p>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @* Here we use Localizer to translate some texts*@
+        <a asp-action="Create">@Localizer["Create New"]</a>
+    }
+</p>
+@if (Model != null && Model.Count<Labo8.Models.NewsMessage>() != 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Message)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Message)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id">@Localizer["Edit"]</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id">@Localizer["Delete"]</a>
+                        }
+                        <a asp-action="Details" asp-route-id="@item.Id">@Localizer["Details"]</a>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div>
+        <p>
+            @ViewData["emptyMessage"]
+        </p>
+    </div>
+}

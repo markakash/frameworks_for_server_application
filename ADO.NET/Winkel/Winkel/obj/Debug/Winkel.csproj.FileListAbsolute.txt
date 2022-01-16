@@ -1,0 +1,7 @@
+C:\Users\sneha\Documents\University\Frameworks\ADO.NET\Winkel\Winkel\bin\Debug\Winkel.exe.config
+C:\Users\sneha\Documents\University\Frameworks\ADO.NET\Winkel\Winkel\bin\Debug\Winkel.exe
+C:\Users\sneha\Documents\University\Frameworks\ADO.NET\Winkel\Winkel\bin\Debug\Winkel.pdb
+C:\Users\sneha\Documents\University\Frameworks\ADO.NET\Winkel\Winkel\obj\Debug\Winkel.csproj.AssemblyReference.cache
+C:\Users\sneha\Documents\University\Frameworks\ADO.NET\Winkel\Winkel\obj\Debug\Winkel.csproj.CoreCompileInputs.cache
+C:\Users\sneha\Documents\University\Frameworks\ADO.NET\Winkel\Winkel\obj\Debug\Winkel.exe
+C:\Users\sneha\Documents\University\Frameworks\ADO.NET\Winkel\Winkel\obj\Debug\Winkel.pdb
